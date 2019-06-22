@@ -1,8 +1,25 @@
 from flask import Blueprint, jsonify, request
+import logging
 from module.DBManager import DBManager
 
 record = Blueprint('record', __name__, url_prefix='/api/v1')
 db = DBManager()
+logging.basicConfig(level=logging.DEBUG)
+
+
+# insert into record...
+@record.route("/record", methods=['PUT'])
+def putRecord():
+    date_str = request.json["date"]
+    menu_id = request.json["menu_id"]
+    count = request.json["count"]
+
+    sql = "INSERT INTO {table}(date, menu_id, count) VALUE(%(date)s, %(menu_id)s, %(count)s)".format(
+        table=db.record_table)
+    db.cur.execute(sql, {"date": date_str, "menu_id": menu_id, "count": count})
+    db.conn.commit()
+    db_result = db.cur.fetchall()
+    return jsonify(db_result)
 
 
 # select * from record
@@ -37,19 +54,29 @@ def getRecord():
     return jsonify(list(map(a, db_result)))
 
 
-# insert into record...
-@record.route("/record", methods=['PUT'])
-def putRecord():
-    date_str = request.json["date"]
-    menu_id = request.json["menu_id"]
-    count = request.json["count"]
+# update record set ?=?? where id=???
+@record.route("/record", methods=['PATCH'])
+def patchRecord():
+    req_query = request.json
+    record_id = req_query.pop("record_id")
 
-    sql = "INSERT INTO {table}(date, menu_id, count) VALUE(%(date)s, %(menu_id)s, %(count)s)".format(
-        table=db.record_table)
-    db.cur.execute(sql, {"date": date_str, "menu_id": menu_id, "count": count})
-    db.conn.commit()
-    db_result = db.cur.fetchall()
-    return jsonify(db_result)
+    try:
+        for k, v in req_query.items():
+            if k == "date":
+                sql = "UPDATE {table} SET date=%s WHERE id=%s".format(table=db.record_table)
+            elif k == "menu_id":
+                sql = "UPDATE {table} SET menu_id=%s WHERE id=%s".format(table=db.record_table)
+            elif k == "count":
+                sql = "UPDATE {table} SET count=%s WHERE id=%s".format(table=db.record_table)
+            else:
+                raise Exception("{}: update key is invalid".fromat(k))
+
+            db.cur.execute(sql, (v, record_id,))
+            db.conn.commit()
+    except Exception as e:
+        logging.debug(e)
+
+    return jsonify({})
 
 
 # delete from record where id=?

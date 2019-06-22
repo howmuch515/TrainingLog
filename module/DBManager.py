@@ -50,14 +50,6 @@ class DBManager():
             logging.critical("Connect DB error")
             logging.critical(e)
 
-    def insertRecord(self, date, menu_id, count):
-        sql = "INSERT INTO {table}(date, menu_id, count) VALUE(%(date)s, %(menu_id)s, %(count)s)".format(
-            table=self.record_table)
-        cur = self.conn.cursor(MySQLdb.cursors.DictCursor)
-        cur.execute(sql, {"date": date, "menu_id": menu_id, "count": count})
-        self.conn.commit()
-        cur.close()
-
     def deleteRecord(self, id):
         sql = "DELETE FROM {table} WHERE id=%(id)s".format(table=self.record_table)
         cur = self.conn.cursor(MySQLdb.cursors.DictCursor)

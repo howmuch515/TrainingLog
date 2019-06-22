@@ -26,7 +26,7 @@ def putRecord():
 @record.route('/record', methods=['GET'])
 def getRecord():
     sql = """
-            SELECT R.id AS record_id, DATE_FORMAT(R.date,'%Y-%m-%d') AS date, R.count AS count, M.id AS menu_id, M.name AS menu_name, C.id AS category_id, C.name AS category_name
+            SELECT R.id AS record_id, DATE_FORMAT(R.date,'%Y-%m-%d') AS date, R.count AS count, M.id AS menu_id, M.name AS menu_name, M.step AS menu_step, C.id AS category_id, C.name AS category_name
             FROM {record_table} R 
             JOIN {menu_table} M ON R.menu_id=M.id 
             JOIN {category_table} C ON M.category_id=C.id
@@ -44,6 +44,7 @@ def getRecord():
         "menu": {
             "menu_id": x["menu_id"],
             "menu_name": x["menu_name"],
+            "menu_step": x["menu_step"],
             "category": {
                 "category_id": x["category_id"],
                 "category_name": x["category_name"]

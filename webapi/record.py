@@ -4,6 +4,11 @@ from module.DBManager import DBManager
 record = Blueprint('record', __name__, url_prefix='/api/v1')
 db = DBManager()
 
-@record.route('/record')
+
+@record.route('/record', methods=['GET'])
 def getRecodrd():
-    return jsonify({"msg": "Hello, world!"})
+    sql = "SELECT * FROM {table}".format(table=db.record_table)
+    db.cur.execute(sql)
+    db.conn.commit()
+    db_result = db.cur.fetchall()
+    return jsonify(db_result)

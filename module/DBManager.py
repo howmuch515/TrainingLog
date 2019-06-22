@@ -20,8 +20,10 @@ class DBManager():
 
         # connect DB
         self.conn = self.connectDB()
+        self.cur = self.conn.cursor(MySQLdb.cursors.DictCursor)
 
     def __del__(self):
+        self.cur.close()
         self.conn.close()
 
     def loadConfig(self, db_config_file):

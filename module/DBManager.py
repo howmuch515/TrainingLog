@@ -49,10 +49,3 @@ class DBManager():
         except Exception as e:
             logging.critical("Connect DB error")
             logging.critical(e)
-
-    def deleteRecord(self, id):
-        sql = "DELETE FROM {table} WHERE id=%(id)s".format(table=self.record_table)
-        cur = self.conn.cursor(MySQLdb.cursors.DictCursor)
-        cur.execute(sql, {"table": self.record_table, "id": id})
-        self.conn.commit()
-        cur.close()

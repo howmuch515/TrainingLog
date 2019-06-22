@@ -28,3 +28,14 @@ def putRecord():
     db.conn.commit()
     db_result = db.cur.fetchall()
     return jsonify(db_result)
+
+
+# delete from record where id=?
+@record.route("/record", methods=['DELETE'])
+def deleteRecord():
+    record_id = request.json["record_id"]
+    sql = "DELETE FROM {table} WHERE id=%(id)s".format(table=db.record_table)
+    db.cur.execute(sql, {"id": record_id})
+    db.conn.commit()
+    db_result = db.cur.fetchall()
+    return jsonify(db_result)

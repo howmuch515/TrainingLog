@@ -299,3 +299,6 @@ tags
 .history
 
 # End of https://www.gitignore.io/api/vim,flask,python,pycharm,visualstudiocode
+
+### Environ Info File ###
+settings/*

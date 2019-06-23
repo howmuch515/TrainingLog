@@ -3,38 +3,50 @@
 <section>
     <div class="container-fluid">
         <div class="row">
-            <div class="col-sm">
+            <div class="col-sm category-card">
                 <div class="card m-5 p-5">
                     <div class="card-body">hogehoge</div>
                 </div>
             </div>
-            <div class="col-sm">
+            <div class="col-sm category-card">
                 <div class="card m-5 p-5">
                     <div class="card-body">hogehoge</div>
                 </div>
             </div>
-            <div class="col-sm">
+            <div class="col-sm category-card">
                 <div class="card m-5 p-5">
                     <div class="card-body">hogehoge</div>
                 </div>
             </div>
             <div class="w-100"></div>
-            <div class="col-sm">
+            <div class="col-sm category-card">
                 <div class="card m-5 p-5">
                     <div class="card-body">hogehoge</div>
                 </div>
             </div>
-            <div class="col-sm">
+            <div class="col-sm category-card">
                 <div class="card m-5 p-5">
                     <div class="card-body">hogehoge</div>
                 </div>
             </div>
-            <div class="col-sm">
+            <div class="col-sm category-card">
                 <div class="card m-5 p-5">
                     <div class="card-body">hogehoge</div>
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        $(function () {
+            $(".category-card").hover(
+                function () {
+                    $(this).addClass("shadow")
+                },
+                function () {
+                    $(this).removeClass("shadow")
+                });
+        })
+    </script>
 </section>
 {% endblock %}}

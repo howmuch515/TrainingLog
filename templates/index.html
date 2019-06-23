@@ -2,43 +2,52 @@
 {% block content %}
 <section>
     <div class="container-fluid">
-        <div class="row">
-            <div class="col-sm category-card">
-                <div class="card m-5 p-5">
-                    <div class="card-body">hogehoge</div>
-                </div>
-            </div>
-            <div class="col-sm category-card">
-                <div class="card m-5 p-5">
-                    <div class="card-body">hogehoge</div>
-                </div>
-            </div>
-            <div class="col-sm category-card">
-                <div class="card m-5 p-5">
-                    <div class="card-body">hogehoge</div>
-                </div>
-            </div>
-            <div class="w-100"></div>
-            <div class="col-sm category-card">
-                <div class="card m-5 p-5">
-                    <div class="card-body">hogehoge</div>
-                </div>
-            </div>
-            <div class="col-sm category-card">
-                <div class="card m-5 p-5">
-                    <div class="card-body">hogehoge</div>
-                </div>
-            </div>
-            <div class="col-sm category-card">
-                <div class="card m-5 p-5">
-                    <div class="card-body">hogehoge</div>
-                </div>
-            </div>
-        </div>
+        <div id="card_board" class="row"></div>
     </div>
 
     <script>
         $(function () {
+            // get record
+            $.ajax({
+                url: '/api/v1/record',
+                type: 'GET',
+                dataType: 'json',
+                timeout: 5000,
+            })
+                .done(function (res) {
+                    // 通信成功時の処理を記述
+                    console.debug(res)
+                })
+                .fail(function () {
+                    // 通信失敗時の処理を記述
+                    console.error("[!] Can't get record API error")
+                });
+
+            // get menu
+            $.ajax({
+                url: '/api/v1/menu',
+                type: 'GET',
+                dataType: 'json',
+                timeout: 5000,
+            })
+                .done(function (res) {
+                    // 通信成功時の処理を記述
+                    console.debug(res)
+                    res.forEach(function (v, i) {
+                        if (i === 3) {
+                            $("#card_board").append('<div class="w-100"></div>')
+                        }
+                        let card_html_format = `<div id="${v.category_name}_card" class="col-sm category-card"><div class="card m-5 p-5"><div class="card-body">${v.category_name}</div></div></div>`
+                        $("#card_board").append(card_html_format);
+                    });
+                })
+                .fail(function () {
+                    // 通信失敗時の処理を記述
+                    console.error("[!] Can't get menu API error")
+                });
+
+
+            // card shadow
             $(".category-card").hover(
                 function () {
                     $(this).addClass("shadow")

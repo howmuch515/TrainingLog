@@ -10,5 +10,6 @@ logging.basicConfig(level=logging.DEBUG)
 # top page
 @pages.route("/", methods=['GET'])
 def index():
+    title = "TrainingLog"
     name = 'Taro'
-    return render_template('index.html', name=name)
+    return render_template('index.html', name=name, title=title)

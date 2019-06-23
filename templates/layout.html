@@ -5,9 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     {% if title %}
-        <title>{{ title }}</title>
+    <title>{{ title }}</title>
     {% else %}
-        <title>Bootstrap 101 Template</title>
+    <title>Bootstrap 101 Template</title>
     {% endif %}
     <!-- Bootstrap -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
@@ -21,6 +21,16 @@
     <![endif]-->
 </head>
 <body>
+<!-- navbar -->
+<nav class="navbar navbar-dark bg-dark">
+    <span class="navbar-brand">
+        TrainingLog
+    </span>
+    <button class="navbar-toggler" type="button">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+</nav>
+
 {% block content %}{% endblock %}
 <!--jQuery-->
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"

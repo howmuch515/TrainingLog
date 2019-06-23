@@ -46,15 +46,15 @@
                     console.error("[!] Can't get menu API error")
                 });
 
-
             // card shadow
-            $(".category-card").hover(
-                function () {
-                    $(this).addClass("shadow")
-                },
-                function () {
+            $(document).on({
+                "mouseleave": function () {
                     $(this).removeClass("shadow")
-                });
+                },
+                "mouseenter": function () {
+                    $(this).addClass("shadow")
+                }
+            }, ".category-card");
         })
     </script>
 </section>

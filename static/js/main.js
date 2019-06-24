@@ -7,8 +7,18 @@ $(function () {
         timeout: 5000,
     })
         .done(function (res) {
-            // 通信成功時の処理を記述
-            console.debug(res)
+            // divide date by category_id
+            let a = function (category_id) {
+                return function (v) {
+                    return v["menu"]["category"]["category_id"] == category_id
+                }
+            }
+            let pushup_record = res.filter(a(1))
+            let squat_record = res.filter(a(2))
+            let pullup_record = res.filter(a(3))
+            let legraise_record = res.filter(a(4))
+            let bridge_record = res.filter(a(5))
+            let handstand_pushup_record = res.filter(a(6))
         })
         .fail(function () {
             // 通信失敗時の処理を記述
@@ -24,7 +34,7 @@ $(function () {
     })
         .done(function (res) {
             // 通信成功時の処理を記述
-            console.debug(res)
+            // console.debug(res)
             res.forEach(function (v, i) {
                 if (i === 3) {
                     $("#card_board").append('<div class="w-100"></div>')

@@ -5,10 +5,9 @@ $(function () {
         type: 'GET',
         dataType: 'json',
         timeout: 5000,
+        async: false
     })
         .done(function (res) {
-            // 通信成功時の処理を記述
-            // console.debug(res)
             res.forEach(function (v, i) {
                 if (i === 3) {
                     $("#card_board").append('<div class="w-100"></div>')
@@ -36,6 +35,7 @@ $(function () {
         type: 'GET',
         dataType: 'json',
         timeout: 5000,
+        async: false
     })
         .done(function (res) {
             // divide date by category_id
@@ -83,7 +83,6 @@ $(function () {
         "click": function () {
             let id = $(this).attr("id")
             let record = $(`#${id}`).data("record")
-            console.debug(`in onclick ${id} : ${record}`)
             open_modal(id, record)
 
         }

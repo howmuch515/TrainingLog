@@ -59,12 +59,15 @@ $(function () {
         });
 
     // modal open function
-    function open_modal(record) {
+    function open_modal(title, record) {
+        let $mt = $("#modal_title")
         let $m = $("#modal_main_content")
+        $mt.empty()
         $m.empty()
 
+        $mt.append(title)
         record.forEach(function (v, i) {
-            $m.append(`<div>${v.date}|${v.count}|${v.menu.menu_name}</div>`)
+            $m.append(`<tr><td>${v.date}</td><td>${v.menu.menu_name}(STEP:${v.menu.menu_step})</td><td>${v.count}</td></tr>`)
         })
         $('#main_modal').modal('show')
     }
@@ -80,7 +83,8 @@ $(function () {
         "click": function () {
             let id = $(this).attr("id")
             let record = $(`#${id}`).data("record")
-            open_modal(record)
+            console.debug(`in onclick ${id} : ${record}`)
+            open_modal(id, record)
 
         }
     }, ".category-card");

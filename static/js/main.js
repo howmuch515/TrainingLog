@@ -58,6 +58,15 @@ $(function () {
             console.error("[!] Can't get record API error")
         });
 
+    // modal open function
+    function open_modal(record) {
+        let $m = $("#modal_main_content")
+        record.forEach(function (v, i) {
+            $m.append(`<div>${v.date}|${v.count}|${v.menu.menu_name}</div>`)
+        })
+        $('#main_modal').modal('show')
+    }
+
     // card shadow
     $(document).on({
         "mouseleave": function () {
@@ -67,7 +76,10 @@ $(function () {
             $(this).addClass("shadow")
         },
         "click": function () {
-            $('#main_modal').modal('show')
+            let id = $(this).attr("id")
+            let record = $(`#${id}`).data("record")
+            open_modal(record)
+
         }
     }, ".category-card");
 })

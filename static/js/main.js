@@ -61,6 +61,8 @@ $(function () {
     // modal open function
     function open_modal(record) {
         let $m = $("#modal_main_content")
+        $m.empty()
+
         record.forEach(function (v, i) {
             $m.append(`<div>${v.date}|${v.count}|${v.menu.menu_name}</div>`)
         })

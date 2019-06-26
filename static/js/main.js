@@ -91,7 +91,6 @@ $(function () {
         })
 
         // set modal menu option
-        console.log(category.menu)
         category.menu.forEach(function (v, i){
             $pmi.append(`<option value='${v.menu_id}'>${v.menu_name}(STEP: ${v.menu_step})</option>`)
         })

@@ -30,10 +30,8 @@
                 <div class="modal-footer">
                         <!-- send log form -->
                         <form id="put-log-form" class="form-row" action="/api/v1/record" method="put">
-                            <input id="put-date" type="datetime-local" class="col form-control">
-                            <select id="put-menu-id" class="col form-control">
-                                <option>1</option>
-                            </select>
+                            <input id="put-date" type="date" class="col form-control">
+                            <select id="put-menu-id" class="col form-control"></select>
                             <input id="put-count" type="number" class="col form-control">
                             <button type="submit"  class="col btn btn-primary">Submit</button>
                         </form>

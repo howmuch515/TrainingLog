@@ -2,8 +2,53 @@
 {% block content %}
 <section>
     <div>
-        <div id="card_boardA" class="d-flex justify-content-around"></div>
-        <div id="card_boardB" class="d-flex justify-content-around"></div>
+        <div id="card_boardA" class="d-flex justify-content-around">
+            <div class="p-2">
+                <div id="pushup_card"
+                     class="card category-card">
+                    <div class="card-header text-center">PUSHUP</div>
+                    <img src="/static/img/pushup.png" class="card-img">
+                </div>
+            </div>
+            <div class="p-2">
+                <div id="squat_card"
+                     class="card category-card">
+                    <div class="card-header text-center">SQUAT</div>
+                    <img src="/static/img/squat.png" class="card-img">
+                </div>
+            </div>
+            <div class="p-2">
+                <div id="pullup_card"
+                     class="card category-card">
+                    <div class="card-header text-center">PULLUP</div>
+                    <img src="/static/img/pullup.png" class="card-img">
+                </div>
+            </div>
+        </div>
+        <div id="card_boardB" class="d-flex justify-content-around">
+            <div class="p-2">
+                <div id="leg_raise_card"
+                     class="card category-card">
+                    <div class="card-header text-center">LEG RAISE</div>
+                    <img src="/static/img/leg_raise.png" class="card-img">
+                </div>
+            </div>
+            <div class="p-2">
+                <div id="bridge_card"
+                     class="card category-card">
+                    <div class="card-header text-center">BRIDGE</div>
+                    <img src="/static/img/bridge.png" class="card-img">
+                </div>
+            </div>
+            <div class="p-2">
+                <div id="handstand_pushup_card"
+                     class="card category-card">
+                    <div class="card-header text-center">HANDSTAND PUSHUP</div>
+                    <img src="/static/img/handstand_pushup.png" class="card-img">
+                </div>
+            </div>
+
+        </div>
     </div>
 
     <!-- Modal -->
@@ -29,13 +74,13 @@
                     </table>
                 </div><!-- /.modal-body -->
                 <div class="modal-footer">
-                        <!-- send log form -->
-                        <form id="put-log-form" class="form-row" action="/api/v1/record" method="put">
-                            <input id="put-date" type="date" class="col form-control">
-                            <select id="put-menu-id" class="col form-control"></select>
-                            <input id="put-count" type="number" class="col form-control">
-                            <button type="submit"  class="col btn btn-primary">Submit</button>
-                        </form>
+                    <!-- send log form -->
+                    <form id="put-log-form" class="form-row" action="/api/v1/record" method="put">
+                        <input id="put-date" type="date" class="col form-control">
+                        <select id="put-menu-id" class="col form-control"></select>
+                        <input id="put-count" type="number" class="col form-control">
+                        <button type="submit" class="col btn btn-primary">Submit</button>
+                    </form>
                 </div><!-- /.modal-footer -->
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->

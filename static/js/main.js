@@ -5,26 +5,10 @@ $(function () {
         type: 'GET',
         dataType: 'json',
         timeout: 5000,
-        async: false
+        async: true
     })
         .done(function (res) {
-            // boarding card on #card_board
-            res.forEach(function (v, i) {
-                let card_html_format = `<div class="p-2">
-                                        <div id="${v.category_name}_card"
-                                            class="card category-card">
-                                            <div class="card-header text-center">${v.category_name}</div>
-                                            <img src="/static/img/pushup.png" class="card-img">
-                                        </div>
-                                    </div>`
-                if (i < 3) {
-                    $("#card_boardA").append(card_html_format);
-                } else {
-                    $("#card_boardB").append(card_html_format);
-                }
-            })
-
-            // divide date by category_id
+            // divide data by category_id
             let a = function (category_id) {
                 return function (v) {
                     return v["category_id"] == category_id
@@ -40,7 +24,6 @@ $(function () {
             $("#handstand_pushup_card").data("category", res.filter(a(6))[0])
         })
         .fail(function () {
-            // 通信失敗時の処理を記述
             console.error("[!] Can't get menu API error")
         });
 
@@ -50,7 +33,7 @@ $(function () {
         type: 'GET',
         dataType: 'json',
         timeout: 5000,
-        async: false
+        async: true
     })
         .done(function (res) {
             // divide date by category_id

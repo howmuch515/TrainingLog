@@ -22,6 +22,21 @@ $(function () {
                                             </div>
                                         </div>`
                 $("#card_board").append(card_html_format);
+
+                // divide date by category_id
+                let a = function (category_id) {
+                    return function (v) {
+                        return v["category_id"] == category_id
+                    }
+                }
+
+                // set category by category
+                $("#pushup_card").data("category", res.filter(a(1))[0])
+                $("#squat_card").data("category", res.filter(a(2))[0])
+                $("#pullup_card").data("category", res.filter(a(3))[0])
+                $("#leg_raise_card").data("category", res.filter(a(4))[0])
+                $("#bridge_card").data("category", res.filter(a(5))[0])
+                $("#handstand_pushup_card").data("category", res.filter(a(6))[0])
             });
         })
         .fail(function () {
@@ -59,18 +74,31 @@ $(function () {
         });
 
     // modal open function
-    function open_modal(title, record) {
+    function open_modal(title, record, category) {
         let $mt = $("#modal_title")
         let $m = $("#modal_main_content")
+        let $pmi = $("#put-menu-id")
         $mt.empty()
         $m.empty()
+        $pmi.empty()
 
+        // set modal title
         $mt.append(title)
+
+        // set modal body
         record.forEach(function (v, i) {
             $m.append(`<tr><td>${v.date}</td><td>${v.menu.menu_name}(STEP:${v.menu.menu_step})</td><td>${v.count}</td></tr>`)
         })
+
+        // set modal menu option
+        category.menu.forEach(function (v, i){
+            $pmi.append(`<option>${v.manu_name}</option>`)
+        })
+
+
         $('#main_modal').modal('show')
     }
+
 
     // card shadow
     $(document).on(
@@ -84,7 +112,8 @@ $(function () {
             "click": function () {
                 let id = $(this).attr("id")
                 let record = $(`#${id}`).data("record")
-                open_modal(id, record)
+                let category = $(`#${id}`).data("category")
+                open_modal(id, record, category)
 
             }
         }, ".category-card");

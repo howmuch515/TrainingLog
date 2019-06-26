@@ -8,36 +8,36 @@ $(function () {
         async: false
     })
         .done(function (res) {
+            // boarding card on #card_board
             res.forEach(function (v, i) {
-                if (i === 3) {
-                    $("#card_board").append('<div class="w-100"></div>')
+                let card_html_format = `<div class="p-2">
+                                        <div id="${v.category_name}_card"
+                                            class="card category-card">
+                                            <div class="card-header text-center">${v.category_name}</div>
+                                            <img src="/static/img/pushup.png" class="card-img">
+                                        </div>
+                                    </div>`
+                if (i < 3) {
+                    $("#card_boardA").append(card_html_format);
+                } else {
+                    $("#card_boardB").append(card_html_format);
                 }
-                let card_html_format = `<div class="col-sm">
-                                            <div id="${v.category_name}_card"
-                                                class="card category-card m-5 color">
-                                                <div class="card-header">${v.category_name}</div>
-                                                <div class="card-body">
-                                                    <div class="card-text">${v.category_name}</div>
-                                                </div>
-                                            </div>
-                                        </div>`
-                $("#card_board").append(card_html_format);
+            })
 
-                // divide date by category_id
-                let a = function (category_id) {
-                    return function (v) {
-                        return v["category_id"] == category_id
-                    }
+            // divide date by category_id
+            let a = function (category_id) {
+                return function (v) {
+                    return v["category_id"] == category_id
                 }
+            }
 
-                // set category by category
-                $("#pushup_card").data("category", res.filter(a(1))[0])
-                $("#squat_card").data("category", res.filter(a(2))[0])
-                $("#pullup_card").data("category", res.filter(a(3))[0])
-                $("#leg_raise_card").data("category", res.filter(a(4))[0])
-                $("#bridge_card").data("category", res.filter(a(5))[0])
-                $("#handstand_pushup_card").data("category", res.filter(a(6))[0])
-            });
+            // set category by category
+            $("#pushup_card").data("category", res.filter(a(1))[0])
+            $("#squat_card").data("category", res.filter(a(2))[0])
+            $("#pullup_card").data("category", res.filter(a(3))[0])
+            $("#leg_raise_card").data("category", res.filter(a(4))[0])
+            $("#bridge_card").data("category", res.filter(a(5))[0])
+            $("#handstand_pushup_card").data("category", res.filter(a(6))[0])
         })
         .fail(function () {
             // 通信失敗時の処理を記述
@@ -69,7 +69,6 @@ $(function () {
             $("#handstand_pushup_card").data("record", res.filter(a(6)))
         })
         .fail(function () {
-            // 通信失敗時の処理を記述
             console.error("[!] Can't get record API error")
         });
 
@@ -91,7 +90,7 @@ $(function () {
         })
 
         // set modal menu option
-        category.menu.forEach(function (v, i){
+        category.menu.forEach(function (v, i) {
             $pmi.append(`<option value='${v.menu_id}'>${v.menu_name}(STEP: ${v.menu_step})</option>`)
         })
 

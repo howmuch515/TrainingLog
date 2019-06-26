@@ -14,7 +14,7 @@ $(function () {
                 }
                 let card_html_format = `<div class="col-sm">
                                             <div id="${v.category_name}_card"
-                                                class="card category-card m-5">
+                                                class="card category-card m-5 color">
                                                 <div class="card-header">${v.category_name}</div>
                                                 <div class="card-body">
                                                     <div class="card-text">${v.category_name}</div>

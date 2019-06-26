@@ -1,0 +1,23 @@
+#pushup_card {
+    background-color: rgba(255, 0, 0, 0.50);
+}
+
+#squat_card {
+    background-color: rgba(0, 255, 0, 0.50);
+}
+
+#pullup_card {
+    background-color: rgba(0, 0, 255, 0.50);
+}
+
+#leg_raise_card {
+    background-color: rgba(255, 255, 0, 0.50);
+}
+
+#bridge_card {
+    background-color: rgba(255, 0, 255, 0.50);
+}
+
+#handstand_pushup_card {
+    background-color: rgba(0, 255, 255, 0.50);
+}

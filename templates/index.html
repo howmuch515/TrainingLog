@@ -29,17 +29,17 @@
                 </div><!-- /.modal-body -->
                 <div class="modal-footer">
                         <!-- send log form -->
-                        <form class="form-row">
-                            <input type="datetime-local" class="col form-control">
-                            <select class="col form-control">
+                        <form id="put-log-form" class="form-row" action="/api/v1/record" method="put">
+                            <input id="put-date" type="datetime-local" class="col form-control">
+                            <select id="put-menu-id" class="col form-control">
                                 <option>1</option>
                                 <option>2</option>
                                 <option>3</option>
                                 <option>4</option>
                                 <option>5</option>
                             </select>
-                            <input type="number" class="col form-control">
-                            <button type="submit" class="col btn btn-primary">Submit</button>
+                            <input id="put-count" type="number" class="col form-control">
+                            <button type="submit"  class="col btn btn-primary">Submit</button>
                         </form>
                 </div><!-- /.modal-footer -->
             </div><!-- /.modal-content -->

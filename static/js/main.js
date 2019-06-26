@@ -73,18 +73,52 @@ $(function () {
     }
 
     // card shadow
-    $(document).on({
-        "mouseleave": function () {
-            $(this).removeClass("shadow")
-        },
-        "mouseenter": function () {
-            $(this).addClass("shadow")
-        },
-        "click": function () {
-            let id = $(this).attr("id")
-            let record = $(`#${id}`).data("record")
-            open_modal(id, record)
+    $(document).on(
+        {
+            "mouseleave": function () {
+                $(this).removeClass("shadow")
+            },
+            "mouseenter": function () {
+                $(this).addClass("shadow")
+            },
+            "click": function () {
+                let id = $(this).attr("id")
+                let record = $(`#${id}`).data("record")
+                open_modal(id, record)
 
-        }
-    }, ".category-card");
+            }
+        }, ".category-card");
+
+    // PUT log
+    $(document).on(
+        {
+            "submit": function (e) {
+                // cancel submit form
+                e.preventDefault()
+
+                let json_data = {
+                    date: $("#put-date").val(),
+                    menu_id: $("#put-menu-id").val(),
+                    count: $("#put-count").val()
+                }
+
+                // put log data
+                let $f = $(this)
+                $.ajax({
+                    url: $f.attr("action"),
+                    type: $f.attr("method"),
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    data: JSON.stringify(json_data),
+                    timeout: 5000,
+                })
+                    .done(function (res) {
+                        console.debug(res)
+                    })
+                    .fail(function (err) {
+                        console.debug(err)
+                    })
+
+            }
+        }, "#put-log-form");
 })

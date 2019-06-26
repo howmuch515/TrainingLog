@@ -10,6 +10,8 @@ logging.basicConfig(level=logging.DEBUG)
 # insert into record...
 @record.route("/record", methods=['PUT'])
 def putRecord():
+    logging.debug(request.json)
+
     date_str = request.json["date"]
     menu_id = request.json["menu_id"]
     count = request.json["count"]

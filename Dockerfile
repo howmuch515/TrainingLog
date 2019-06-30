@@ -1,4 +1,4 @@
-FROM python:3.7.3-alpine3.9
+FROM python:3.7
 USER root
 
 ENV LC_ALL=C.UTF-8
@@ -13,3 +13,5 @@ COPY Pipfile.lock ./
 
 RUN pip install pipenv
 RUN pipenv install --system
+
+CMD ["python", "app.py"]

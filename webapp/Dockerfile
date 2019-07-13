@@ -7,9 +7,7 @@ ENV LANG=C.UTF-8
 RUN mkdir /var/app
 WORKDIR /var/app
 
-COPY TrainingLog ./
-COPY Pipfile ./
-COPY Pipfile.lock ./
+COPY . ./
 
 RUN pip install pipenv
 RUN pipenv install --system

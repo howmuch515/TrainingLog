@@ -10,6 +10,5 @@ logging.basicConfig(level=logging.DEBUG)
 # top page
 @pages.route("/", methods=['GET'])
 def index():
-    title = "webapp"
-    name = 'Taro'
-    return render_template('index.html', name=name, title=title)
+    title = "TrainingLog"
+    return render_template('index.html', title=title)

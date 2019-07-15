@@ -68,8 +68,15 @@ $(function () {
         $mt.append(title)
 
         // set modal body
+        let tmp_date = ""
         record.forEach(function (v, i) {
-            $m.append(`<tr><td>${v.date}</td><td>${v.menu.menu_name}(STEP:${v.menu.menu_step})</td><td>${v.count}</td></tr>`)
+            if(tmp_date != v.date) {
+                $m.append(`<tr class="record_head_of_date"><td>${v.date}</td><td>${v.menu.menu_name}(STEP:${v.menu.menu_step})</td><td>${v.count}</td></tr>`)
+            } else {
+                $m.append(`<tr><td>${v.date}</td><td>${v.menu.menu_name}(STEP:${v.menu.menu_step})</td><td>${v.count}</td></tr>`)
+            }
+
+            tmp_date = v.date
         })
 
         // set modal menu option

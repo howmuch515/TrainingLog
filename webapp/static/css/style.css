@@ -21,3 +21,8 @@
 #handstand_pushup_card {
     background-color: rgba(0, 255, 255, 0.50);
 }
+
+.record_head_of_date {
+    border-top: solid;
+    border-color: red;
+}

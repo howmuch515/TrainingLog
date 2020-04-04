@@ -302,3 +302,4 @@ tags
 
 ### Environ Info File ###
 settings/
+database/mysql_init/training_dump.sql

@@ -8,4 +8,6 @@ ENV  MYSQL_USER training
 ENV  MYSQL_PASSWORD hoge0515
 ENV  MYSQL_ROOT_PASSWORD root
 
+COPY ./my.cnf /etc/mysql/conf.d/my.cnf
+
 CMD ["mysqld"]

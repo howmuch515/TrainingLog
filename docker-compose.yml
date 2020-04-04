@@ -1,7 +1,24 @@
 version: '3'
 services:
   webapp:
-    container_name: "training_log"
+    container_name: "tl_wp"
     build: ./webapp
     ports:
       - "80:5000"
+    depends_on:
+      - database
+    networks:
+      - training_log
+
+  database:
+    container_name: "tl_db"
+    build: ./database
+    ports:
+      - "3306:3306"
+    networks:
+      - training_log
+    volumes:
+      - ./database/mysql_init:/docker-entrypoint-initdb.d
+
+networks:
+  training_log:

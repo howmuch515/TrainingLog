@@ -1,8 +1,11 @@
 import configparser
 import logging
 import MySQLdb
+from time import sleep
 
 DB_CONFIG_FILE = "./settings/dbinfo.ini"
+SLEEP_INTERVAL = 3
+CONNECTION_TRY_LIMIT = 10
 logging.basicConfig(level=logging.DEBUG)
 
 
@@ -17,10 +20,9 @@ class DBManager():
         self.record_table = config["RECORD_TABLE"]
         self.menu_table = config["MENU_TABLE"]
         self.category_table = config["CATEGORY_TABLE"]
+        self.conn = None
+        self.cur = None
 
-        # connect DB
-        self.conn = self.connectDB()
-        self.cur = self.conn.cursor(MySQLdb.cursors.DictCursor)
 
     def __del__(self):
         self.cur.close()
@@ -37,15 +39,23 @@ class DBManager():
             logging.critical(e)
 
     def connectDB(self):
-        try:
-            conn = MySQLdb.connect(
-                host=self.host,
-                port=int(self.port),
-                user=self.user,
-                passwd=self.passwd,
-                db=self.db_name,
-            )
-            return conn
-        except Exception as e:
-            logging.critical("Connect DB error")
-            logging.critical(e)
+        access_counter = 0
+
+        while access_counter < CONNECTION_TRY_LIMIT:
+            try:
+                access_counter += 1
+                self.conn = MySQLdb.connect(
+                    host=self.host,
+                    port=int(self.port),
+                    user=self.user,
+                    passwd=self.passwd,
+                    db=self.db_name,
+                )
+                self.cur = self.conn.cursor(MySQLdb.cursors.DictCursor)
+                logging.info(f"[*] DB Connection is success!")
+                return self.conn, self.cur
+
+            except MySQLdb.Error as e:
+                logging.critical(f"[!] ({access_counter})Connect DB error.")
+                logging.critical(e)
+                sleep(SLEEP_INTERVAL)

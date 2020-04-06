@@ -11,19 +11,10 @@ TrainingLog
 ![demo03](screenshot/demo03.png)
 
 ## Requirement
-* docker
-* mysql
+* docker-compose
 
 ## Install
-### DataBase
-```shell
-mysql -u training -p -h <host_name> training category < SQL/category_init.sql
-mysql -u training -p -h <host_name> training menu < SQL/menu_init.sql
-mysql -u training -p -h <host_name> training record < SQL/record_init.sql
-```
 
-### Web app
 ```shell
-docker build -t training_log .
-docker run -it -p 5000:5000 training_log
+docker-compose up
 ```

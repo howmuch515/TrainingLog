@@ -17,6 +17,7 @@ services:
       - training_log
     volumes:
       - ./database/mysql_init:/docker-entrypoint-initdb.d
+      - ./database/mysql_data:/var/lib/mysql
 
   nginx:
     container_name: "tl_nginx"

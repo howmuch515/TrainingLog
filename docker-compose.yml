@@ -5,7 +5,6 @@ services:
     build: ./webapp
     depends_on:
       - database
-      - nginx
     networks:
       - training_log
 
@@ -24,6 +23,8 @@ services:
     image: nginx:alpine
     ports:
       - "80:80"
+    depends_on:
+      - webapp
     volumes:
       - "./nginx/conf.d/training_log.conf:/etc/nginx/conf.d/default.conf:ro"
       - "./nginx/nginx.conf:/etc/nginx/nginx.conf:ro"

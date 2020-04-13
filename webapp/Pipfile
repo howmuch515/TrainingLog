@@ -12,7 +12,6 @@ sqlalchemy = "*"
 flask-sqlalchemy = "*"
 pymysql = "*"
 mysqlclient = "*"
-flask-httpauth = "*"
 
 [requires]
 python_version = "3.7"

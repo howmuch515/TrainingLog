@@ -65,7 +65,10 @@ Vue.component('menu_card',{
 Vue.component('record-modal', {
     data: function() {
         return {
-            pre_date: ""
+            pre_date: "",
+            submit_date: "",
+            submit_menu_id: "",
+            submit_count: ""
         }
     },
     methods: {
@@ -73,6 +76,30 @@ Vue.component('record-modal', {
             let result = this.pre_date !== next_date
             this.pre_date = next_date
             return result
+        },
+        submit_log: function() {
+            let submit_data = {
+                date: this.submit_date,
+                menu_id: this.submit_menu_id,
+                count: this.submit_count
+            }
+
+            axios
+            .put(RECORD_API, submit_data)
+            .then(res => {
+                console.log(`[*] submit ==> ${res.data}`)
+            })
+            .catch(err => {
+                console.error(`[!] failed submit... ${err.data}`)
+            })
+
+            // refresh record data.
+            axios
+            .get(RECORD_API)
+            .then(res => {
+                store.commit("set_record", res.data)
+            })
+            .catch(err => console.error(`[-] Miss to get record. ${err}`))
         }
     },
     computed: {
@@ -112,9 +139,9 @@ Vue.component('record-modal', {
                     <div class="modal-footer">
                         <!-- send log form -->
                         <form id="put-log-form" class="form-row" action="/api/v1/record" method="put">
-                            <input id="put-date" type="date" class="col form-control">
-                            <select id="put-menu-id" class="col form-control"></select>
-                            <input id="put-count" type="number" class="col form-control">
+                            <input v-model="submit_date" type="date" class="col form-control">
+                            <select v-model="submit_menu_id" class="col form-control"></select>
+                            <input v-model="submit_count" type="number" class="col form-control">
                             <button type="submit" class="col btn btn-primary">Submit</button>
                         </form>
                     </div><!-- /.modal-footer -->
@@ -127,19 +154,24 @@ Vue.component('record-modal', {
 var vm = new Vue({
     el: "#app",
     mounted: function() {
-        axios
-        .get(MENU_API)
-        .then(res => {
-            store.commit("set_menu", res.data)
-        })
-        .catch(err => console.error(`[-] Miss to get menu. ${err}`))
+        this.refresh()
+    },
+    methods: {
+        refresh() {
+            axios
+            .get(MENU_API)
+            .then(res => {
+                store.commit("set_menu", res.data)
+            })
+            .catch(err => console.error(`[-] Miss to get menu. ${err}`))
 
-        axios
-        .get(RECORD_API)
-        .then(res => {
-            store.commit("set_record", res.data)
-        })
-        .catch(err => console.error(`[-] Miss to get record. ${err}`))
+            axios
+            .get(RECORD_API)
+            .then(res => {
+                store.commit("set_record", res.data)
+            })
+            .catch(err => console.error(`[-] Miss to get record. ${err}`))
+        }
     },
     delimiters: ['<%=', '%>']
 })

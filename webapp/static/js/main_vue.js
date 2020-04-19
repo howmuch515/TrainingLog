@@ -9,6 +9,7 @@ const store = new Vuex.Store({
         menu_list: [],
         record_list: [],
         modal_content: [],
+        select_content: [],
         card_category: "",
     },
     mutations: {
@@ -20,6 +21,9 @@ const store = new Vuex.Store({
         },
         set_modal(state, modal_content) {
             state.modal_content = modal_content
+        },
+        set_select(state, select_content) {
+            state.select_content = select_content
         },
         set_category(state, card_category) {
             state.card_category = card_category
@@ -36,17 +40,28 @@ Vue.component('menu_card',{
         }
     },
     methods: {
-        open_modal: function (card_title) {
+        open_modal: function(card_title) {
             store.commit("set_category", card_title)
+
             let record_list = store.state.record_list
-            this.filter_category(record_list, card_title)
+            this.filter_record(record_list, card_title)
+
+            let menu_list = store.state.menu_list
+            this.filter_menu(menu_list, card_title)
+
             $('#main_modal').modal('show')
         },
-        filter_category: function (record_list, card_title) {
+        filter_record: function(record_list, card_title) {
             let filtered_record_list = record_list.filter(function(v) {
                 return v["menu"]["category"]["category_name"] + "_card" == card_title
             })
             store.commit("set_modal", filtered_record_list)
+        },
+        filter_menu: function(menu_list, card_title) {
+            let filtered_menu_list = menu_list.filter(function(v) {
+                return v["category_name"] + "_card" == card_title
+            })
+            store.commit("set_select", filtered_menu_list[0]["menu"])
         }
     },
     template: `
@@ -67,7 +82,7 @@ Vue.component('record-modal', {
         return {
             pre_date: "",
             submit_date: "",
-            submit_menu_id: "",
+            submit_menu_id: 5,
             submit_count: ""
         }
     },
@@ -103,8 +118,14 @@ Vue.component('record-modal', {
         }
     },
     computed: {
+        card_title() {
+            return store.state.card_category
+        },
         modal_content() {
             return store.state.modal_content
+        },
+        select_content() {
+            return store.state.select_content
         }
     },
     template: `
@@ -113,7 +134,7 @@ Vue.component('record-modal', {
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 id="modal_title" class="modal-title">Modal Title</h5>
+                        <h5 id="modal_title" class="modal-title">{{ card_title }}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="閉じる">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -140,7 +161,11 @@ Vue.component('record-modal', {
                         <!-- send log form -->
                         <form id="put-log-form" class="form-row" action="/api/v1/record" method="put">
                             <input v-model="submit_date" type="date" class="col form-control">
-                            <select v-model="submit_menu_id" class="col form-control"></select>
+                            <select v-model="submit_menu_id" class="col form-control">
+                                <option v-for="v in select_content" :value="v.menu_id">
+                                    {{ v.menu_name }}(STEP: {{ v.menu_step }})
+                                </option>
+                            </select>
                             <input v-model="submit_count" type="number" class="col form-control">
                             <button type="submit" class="col btn btn-primary">Submit</button>
                         </form>

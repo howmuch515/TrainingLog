@@ -1,142 +1,197 @@
-$(function () {
-    // get menu
-    $.ajax({
-        url: '/api/v1/menu',
-        type: 'GET',
-        dataType: 'json',
-        timeout: 5000,
-        async: true
-    })
-        .done(function (res) {
-            // divide data by category_id
-            let a = function (category_id) {
-                return function (v) {
-                    return v["category_id"] == category_id
-                }
-            }
+Vue.use(Vuex)
 
-            // set category by category
-            $("#pushup_card").data("category", res.filter(a(1))[0])
-            $("#squat_card").data("category", res.filter(a(2))[0])
-            $("#pullup_card").data("category", res.filter(a(3))[0])
-            $("#leg_raise_card").data("category", res.filter(a(4))[0])
-            $("#bridge_card").data("category", res.filter(a(5))[0])
-            $("#handstand_pushup_card").data("category", res.filter(a(6))[0])
-        })
-        .fail(function () {
-            console.error("[!] Can't get menu API error")
-        });
-
-    // get record
-    $.ajax({
-        url: '/api/v1/record',
-        type: 'GET',
-        dataType: 'json',
-        timeout: 5000,
-        async: true
-    })
-        .done(function (res) {
-            // divide date by category_id
-            let a = function (category_id) {
-                return function (v) {
-                    return v["menu"]["category"]["category_id"] == category_id
-                }
-            }
-
-            // set record by category
-            $("#pushup_card").data("record", res.filter(a(1)))
-            $("#squat_card").data("record", res.filter(a(2)))
-            $("#pullup_card").data("record", res.filter(a(3)))
-            $("#leg_raise_card").data("record", res.filter(a(4)))
-            $("#bridge_card").data("record", res.filter(a(5)))
-            $("#handstand_pushup_card").data("record", res.filter(a(6)))
-        })
-        .fail(function () {
-            console.error("[!] Can't get record API error")
-        });
-
-    // modal open function
-    function open_modal(title, record, category) {
-        let $mt = $("#modal_title")
-        let $m = $("#modal_main_content")
-        let $pmi = $("#put-menu-id")
-        $mt.empty()
-        $m.empty()
-        $pmi.empty()
-
-        // set modal title
-        $mt.append(title)
-
-        // set modal body
-        let tmp_date = ""
-        record.forEach(function (v, i) {
-            if(tmp_date != v.date) {
-                $m.append(`<tr class="record_head_of_date"><td>${v.date}</td><td>${v.menu.menu_name}(STEP:${v.menu.menu_step})</td><td>${v.count}</td></tr>`)
-            } else {
-                $m.append(`<tr><td>${v.date}</td><td>${v.menu.menu_name}(STEP:${v.menu.menu_step})</td><td>${v.count}</td></tr>`)
-            }
-
-            tmp_date = v.date
-        })
-
-        // set modal menu option
-        category.menu.forEach(function (v, i) {
-            $pmi.append(`<option value='${v.menu_id}'>${v.menu_name}(STEP: ${v.menu_step})</option>`)
-        })
+const MENU_API = '/api/v1/menu'
+const RECORD_API = '/api/v1/record'
 
 
-        $('#main_modal').modal('show')
+const store = new Vuex.Store({
+    state: {
+        menu_list: [],
+        record_list: [],
+        modal_content: [],
+        select_content: [],
+        card_category: "",
+    },
+    mutations: {
+        set_menu(state, menu_list) {
+            state.menu_list = menu_list
+        },
+        set_record(state, record_list) {
+            state.record_list = record_list
+        },
+        add_record(state, item) {
+            state.record_list.push(item)
+        },
+        set_modal(state, modal_content) {
+            state.modal_content = modal_content
+        },
+        set_select(state, select_content) {
+            state.select_content = select_content
+        },
+        set_category(state, card_category) {
+            state.card_category = card_category
+        }
     }
+})
 
 
-    // card shadow
-    $(document).on(
-        {
-            "mouseleave": function () {
-                $(this).removeClass("shadow")
-            },
-            "mouseenter": function () {
-                $(this).addClass("shadow")
-            },
-            "click": function () {
-                let id = $(this).attr("id")
-                let record = $(`#${id}`).data("record")
-                let category = $(`#${id}`).data("category")
-                open_modal(id, record, category)
+Vue.component('menu_card',{
+    props: ['card_title', 'img_path'],
+    computed: {
+        modal_content() {
+            return store.state.modal_content
+        }
+    },
+    methods: {
+        open_modal: function(card_title) {
+            store.commit("set_category", card_title)
 
+            let record_list = store.state.record_list
+            this.filter_record(record_list, card_title)
+
+            let menu_list = store.state.menu_list
+            this.filter_menu(menu_list, card_title)
+
+            $('#main_modal').modal('show')
+        },
+        filter_record: function(record_list, card_title) {
+            let filtered_record_list = record_list.filter(function(v) {
+                return v["menu"]["category"]["category_name"] + "_card" == card_title
+            })
+            store.commit("set_modal", filtered_record_list)
+        },
+        filter_menu: function(menu_list, card_title) {
+            let filtered_menu_list = menu_list.filter(function(v) {
+                return v["category_name"] + "_card" == card_title
+            })
+            store.commit("set_select", filtered_menu_list[0]["menu"])
+        }
+    },
+    template: `
+        <div class="p-2">
+            <div :id="card_title"
+                class="card category-card"
+                @click="open_modal(card_title)">
+                <div class="card-header text-center">{{ card_title }}</div>
+                <img :src="img_path" class="card-img">
+            </div>
+        </div>`
+    
+})
+
+
+Vue.component('record-modal', {
+    data: function() {
+        return {
+            pre_date: "",
+            submit_date: "",
+            submit_menu_id: 5,
+            submit_count: ""
+        }
+    },
+    methods: {
+        isHead: function(next_date) {
+            let result = this.pre_date !== next_date
+            this.pre_date = next_date
+            return result
+        },
+        submit_log: function() {
+            let submit_data = {
+                date: this.submit_date,
+                menu_id: this.submit_menu_id,
+                count: this.submit_count
             }
-        }, ".category-card");
 
-    // PUT log
-    $(document).on(
-        {
-            "submit": function (e) {
-                // cancel submit form
-                e.preventDefault()
+            axios
+            .put(RECORD_API, submit_data)
+            .then(res => {
+                console.log(`[*] submit ==> ${res.data}`)
+            })
+            .catch(err => {
+                console.error(`[!] failed submit... ${err.data}`)
+            })
+        }
+    },
+    computed: {
+        card_title() {
+            return store.state.card_category
+        },
+        modal_content() {
+            return store.state.modal_content
+        },
+        select_content() {
+            return store.state.select_content
+        }
+    },
+    template: `
+        <!-- Modal -->
+        <div id="main_modal" class="modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 id="modal_title" class="modal-title">{{ card_title }}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="閉じる">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div><!-- /.modal-header -->
+                    <div class="modal-body">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>DATE</th>
+                                <th>MENU(STEP)</th>
+                                <th>COUNT</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="v in modal_content" :class="{ record_head_of_date: isHead(v.date) }">
+                                    <td>{{ v.date }}</td>
+                                    <td>{{ v.menu.menu_name }}(STEP:{{ v.menu.menu_step }})</td>
+                                    <td>{{ v.count }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div><!-- /.modal-body -->
+                    <div class="modal-footer">
+                        <!-- send log form -->
+                        <form id="put-log-form" class="form-row">
+                            <input v-model="submit_date" type="date" class="col form-control">
+                            <select v-model="submit_menu_id" class="col form-control">
+                                <option v-for="v in select_content" :value="v.menu_id">
+                                    {{ v.menu_name }}(STEP: {{ v.menu_step }})
+                                </option>
+                            </select>
+                            <input v-model="submit_count" type="number" class="col form-control">
+                            <button type="submit" @click="submit_log" class="col btn btn-primary">Submit</button>
+                        </form>
+                    </div><!-- /.modal-footer -->
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->` 
+})
 
-                let json_data = {
-                    date: $("#put-date").val(),
-                    menu_id: $("#put-menu-id").val(),
-                    count: $("#put-count").val()
-                }
 
-                // put log data
-                let $f = $(this)
-                $.ajax({
-                    url: $f.attr("action"),
-                    type: $f.attr("method"),
-                    contentType: 'application/json',
-                    dataType: 'json',
-                    data: JSON.stringify(json_data),
-                    timeout: 5000,
-                })
-                    .done(function (res) {
-                        console.debug(res)
-                    })
-                    .fail(function (err) {
-                        console.debug(err)
-                    })
+var vm = new Vue({
+    el: "#app",
+    mounted: function() {
+        this.refresh()
+    },
+    methods: {
+        refresh() {
+            axios
+            .get(MENU_API)
+            .then(res => {
+                store.commit("set_menu", res.data)
+            })
+            .catch(err => console.error(`[-] Miss to get menu. ${err}`))
 
-            }
-        }, "#put-log-form");
+            axios
+            .get(RECORD_API)
+            .then(res => {
+                store.commit("set_record", res.data)
+            })
+            .catch(err => console.error(`[-] Miss to get record. ${err}`))
+        }
+    },
+    delimiters: ['<%=', '%>']
 })

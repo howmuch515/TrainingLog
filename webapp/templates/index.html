@@ -1,89 +1,19 @@
 {% extends "layout.html" %}
 {% block content %}
-<section>
-    <div>
+<section id="app">
+    <div id="main_panel">
         <div id="card_boardA" class="d-flex justify-content-around">
-            <div class="p-2">
-                <div id="pushup_card"
-                     class="card category-card">
-                    <div class="card-header text-center">PUSHUP</div>
-                    <img src="/static/img/pushup.png" class="card-img">
-                </div>
-            </div>
-            <div class="p-2">
-                <div id="squat_card"
-                     class="card category-card">
-                    <div class="card-header text-center">SQUAT</div>
-                    <img src="/static/img/squat.png" class="card-img">
-                </div>
-            </div>
-            <div class="p-2">
-                <div id="pullup_card"
-                     class="card category-card">
-                    <div class="card-header text-center">PULLUP</div>
-                    <img src="/static/img/pullup.png" class="card-img">
-                </div>
-            </div>
+            <menu_card card_title="pushup_card" img_path="/static/img/pushup.png"></menu_card>
+            <menu_card card_title="squat_card" img_path="/static/img/squat.png"></menu_card>
+            <menu_card card_title="pullup_card" img_path="/static/img/pullup.png"></menu_card>
         </div>
         <div id="card_boardB" class="d-flex justify-content-around">
-            <div class="p-2">
-                <div id="leg_raise_card"
-                     class="card category-card">
-                    <div class="card-header text-center">LEG RAISE</div>
-                    <img src="/static/img/leg_raise.png" class="card-img">
-                </div>
-            </div>
-            <div class="p-2">
-                <div id="bridge_card"
-                     class="card category-card">
-                    <div class="card-header text-center">BRIDGE</div>
-                    <img src="/static/img/bridge.png" class="card-img">
-                </div>
-            </div>
-            <div class="p-2">
-                <div id="handstand_pushup_card"
-                     class="card category-card">
-                    <div class="card-header text-center">HANDSTAND PUSHUP</div>
-                    <img src="/static/img/handstand_pushup.png" class="card-img">
-                </div>
-            </div>
-
+            <menu_card card_title="leg_raise_card" img_path="/static/img/leg_raise.png"></menu_card>
+            <menu_card card_title="bridge_card" img_path="/static/img/bridge.png"></menu_card>
+            <menu_card card_title="handstand_pushup_card" img_path="/static/img/handstand_pushup.png"></menu_card>
         </div>
     </div>
 
-    <!-- Modal -->
-    <div id="main_modal" class="modal" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 id="modal_title" class="modal-title">Modal Title</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="閉じる">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div><!-- /.modal-header -->
-                <div class="modal-body">
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th>DATE</th>
-                            <th>MENU(STEP)</th>
-                            <th>COUNT</th>
-                        </tr>
-                        </thead>
-                        <tbody id="modal_main_content"></tbody>
-                    </table>
-                </div><!-- /.modal-body -->
-                <div class="modal-footer">
-                    <!-- send log form -->
-                    <form id="put-log-form" class="form-row" action="/api/v1/record" method="put">
-                        <input id="put-date" type="date" class="col form-control">
-                        <select id="put-menu-id" class="col form-control"></select>
-                        <input id="put-count" type="number" class="col form-control">
-                        <button type="submit" class="col btn btn-primary">Submit</button>
-                    </form>
-                </div><!-- /.modal-footer -->
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
+    <record-modal></record-modal>
 </section>
 {% endblock %}

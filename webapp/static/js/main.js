@@ -26,7 +26,7 @@ const store = new Vuex.Store({
 })
 
 
-Vue.component('MainCard',{
+Vue.component('menu-card',{
     props: ['card_title', 'img_path'],
     methods: {
         open_modal: function() {
@@ -46,7 +46,7 @@ Vue.component('MainCard',{
 })
 
 
-Vue.component('RecordModal', {
+Vue.component('record-modal', {
     data: function() {
         return {
             pre_date: "",

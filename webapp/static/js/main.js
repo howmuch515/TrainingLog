@@ -19,12 +19,6 @@ const store = new Vuex.Store({
         set_record(state, record_list) {
             state.record_list = record_list
         },
-        set_modal(state, modal_content) {
-            state.modal_content = modal_content
-        },
-        set_select(state, select_content) {
-            state.select_content = select_content
-        },
         set_category(state, card_category) {
             state.card_category = card_category
         }
@@ -32,7 +26,7 @@ const store = new Vuex.Store({
 })
 
 
-Vue.component('menu_card',{
+Vue.component('MainCard',{
     props: ['card_title', 'img_path'],
     methods: {
         open_modal: function() {
@@ -49,11 +43,10 @@ Vue.component('menu_card',{
                 <img :src="img_path" class="card-img">
             </div>
         </div>`
-    
 })
 
 
-Vue.component('record-modal', {
+Vue.component('RecordModal', {
     data: function() {
         return {
             pre_date: "",
@@ -112,16 +105,16 @@ Vue.component('record-modal', {
             return store.state.card_category
         },
         selected_record_list() {
-            let category = store.state.card_category
             let r = store.state.record_list
+            let c = store.state.card_category
 
-            return this.filter_record(r ,category)
+            return this.filter_record(r, c)
         },
         selected_menu_list() {
-            let category = store.state.card_category
-            let r = store.state.menu_list
+            let m = store.state.menu_list
+            let c = store.state.card_category
 
-            return this.filter_menu(r ,category)
+            return this.filter_menu(m, c)
         }
     },
     template: `

@@ -33,6 +33,7 @@ def getRecord():
             FROM {record_table} R
             JOIN {menu_table} M ON R.menu_id=M.id
             JOIN {category_table} C ON M.category_id=C.id
+            ORDER BY R.date
         """.format(record_table=db.record_table, menu_table=db.menu_table, category_table=db.category_table)
 
     db.cur.execute(sql)

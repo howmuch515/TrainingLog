@@ -120,7 +120,7 @@ Vue.component('record-modal', {
     template: `
         <!-- Modal -->
         <div id="main_modal" class="modal" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document">
+            <div class="modal-dialog modal-dialog-scrollable" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 id="modal_title" class="modal-title">{{ card_title }}</h5>

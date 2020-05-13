@@ -1,5 +1,5 @@
 from functools import wraps
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, abort, jsonify, request
 import logging
 from module.DBManager import DBManager
 
@@ -22,7 +22,7 @@ def dbConnect(func):
 
 @menu.route("/menu", methods=['GET'])
 @dbConnect
-def getMenu(db):
+def getAllMenu(db):
     sql = "SELECT category.id category_id, category.name category_name FROM {table}".format(table=db.category_table)
     db.cur.execute(sql)
     db.conn.commit()
@@ -55,5 +55,35 @@ def getMenu(db):
                     "menu_name": i["menu_name"],
                     "menu_step": i["menu_step"]
                 })
+
+    return jsonify(result_list)
+
+@menu.route("/menu/<string:category_name>", methods=['GET'])
+@dbConnect
+def getMenu(db, category_name):
+    # check category
+    if category_name not in ("pushup", "squat", "pullup", "leg_raise", "bridge", "handstand_pushup"):
+        return  jsonify({"message": "category name is invalid."}), 404
+
+    # list up category
+    sql = """
+        SELECT menu.id menu_id, menu.name menu_name, menu.step menu_step, category_id, category.name category_name
+        FROM {menu_table}
+        JOIN {category_table} ON menu.category_id=category.id
+        WHERE category.name='{category_name}'
+    """.format(menu_table=db.menu_table, category_table=db.category_table, category_name=category_name)
+
+    db.cur.execute(sql)
+    db.conn.commit()
+    db_result = db.cur.fetchall()
+
+    # group by category
+    result_list = []
+    for i in db_result:
+        result_list.append({
+            "menu_id": i["menu_id"],
+            "menu_name": i["menu_name"],
+            "menu_step": i["menu_step"]
+        })
 
     return jsonify(result_list)

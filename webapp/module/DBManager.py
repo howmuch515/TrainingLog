@@ -23,11 +23,6 @@ class DBManager():
         self.conn = None
         self.cur = None
 
-
-    def __del__(self):
-        self.cur.close()
-        self.conn.close()
-
     def loadConfig(self, db_config_file):
         try:
             parser = configparser.ConfigParser()
@@ -59,3 +54,8 @@ class DBManager():
                 logging.critical(f"[!] ({access_counter})Connect DB error.")
                 logging.critical(e)
                 sleep(SLEEP_INTERVAL)
+
+    def closeDB(self):
+        self.cur.close()
+        self.conn.close()
+    

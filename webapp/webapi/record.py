@@ -1,16 +1,29 @@
+from functools import wraps
 from flask import Blueprint, jsonify, request
 import logging
 from module.DBManager import DBManager
 
 record = Blueprint('record', __name__, url_prefix='/api/v1')
-db = DBManager()
-db.connectDB()
 logging.basicConfig(level=logging.DEBUG)
 
 
+# DB connect decorator.
+def dbConnect(func):
+    @wraps(func)
+    def decorate(*args, **keywords):
+        keywords["db"] = DBManager()
+        keywords["db"].connectDB()
+        result = func(*args, **keywords)
+        keywords["db"].closeDB()
+        return result
+
+    decorate.__name__ = func.__name__
+    return decorate
+
 # insert into record...
 @record.route("/record", methods=['PUT'])
-def putRecord():
+@dbConnect
+def putRecord(db):
     logging.debug(request.json)
 
     date_str = request.json["date"]
@@ -27,7 +40,8 @@ def putRecord():
 
 # select * from record
 @record.route('/record', methods=['GET'])
-def getRecord():
+@dbConnect
+def getRecord(db):
     sql = """
             SELECT R.id AS record_id, DATE_FORMAT(R.date,'%Y-%m-%d') AS date, R.count AS count, M.id AS menu_id, M.name AS menu_name, M.step AS menu_step, C.id AS category_id, C.name AS category_name
             FROM {record_table} R
@@ -61,7 +75,8 @@ def getRecord():
 
 # update record set ?=?? where id=???
 @record.route("/record", methods=['PATCH'])
-def patchRecord():
+@dbConnect
+def patchRecord(db):
     req_query = request.json
     record_id = req_query.pop("record_id")
 
@@ -86,7 +101,8 @@ def patchRecord():
 
 # delete from record where id=?
 @record.route("/record", methods=['DELETE'])
-def deleteRecord():
+@dbConnect
+def deleteRecord(db):
     record_id = request.json["record_id"]
     sql = "DELETE FROM {table} WHERE id=%(id)s".format(table=db.record_table)
     db.cur.execute(sql, {"id": record_id})

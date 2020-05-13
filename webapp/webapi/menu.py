@@ -1,15 +1,28 @@
+from functools import wraps
 from flask import Blueprint, jsonify, request
 import logging
 from module.DBManager import DBManager
 
 menu = Blueprint('menu', __name__, url_prefix='/api/v1')
-db = DBManager()
-db.connectDB()
 logging.basicConfig(level=logging.DEBUG)
 
 
+# DB connect decorator.
+def dbConnect(func):
+    @wraps(func)
+    def decorate(*args, **keywords):
+        keywords["db"] = DBManager()
+        keywords["db"].connectDB()
+        result = func(*args, **keywords)
+        keywords["db"].closeDB()
+        return result
+
+    decorate.__name__ = func.__name__
+    return decorate
+
 @menu.route("/menu", methods=['GET'])
-def getMenu():
+@dbConnect
+def getMenu(db):
     sql = "SELECT category.id category_id, category.name category_name FROM {table}".format(table=db.category_table)
     db.cur.execute(sql)
     db.conn.commit()

@@ -61,8 +61,18 @@ def getAllMenu(db):
 @menu.route("/menu/<string:category_name>", methods=['GET'])
 @dbConnect
 def getMenu(db, category_name):
-    # check category
-    if category_name not in ("pushup", "squat", "pullup", "leg_raise", "bridge", "handstand_pushup"):
+    # check user input category_name
+    category_sql = """
+        SELECT category.name category_name
+        FROM {category_table}
+    """.format(category_table=db.category_table)
+
+    db.cur.execute(category_sql)
+    db.conn.commit()
+    category_result = db.cur.fetchall()
+
+    category_list = list(map(lambda x: x["category_name"], category_result))
+    if category_name not in category_list:
         return  jsonify({"message": "category name is invalid."}), 404
 
     # list up category
@@ -70,10 +80,10 @@ def getMenu(db, category_name):
         SELECT menu.id menu_id, menu.name menu_name, menu.step menu_step, category_id, category.name category_name
         FROM {menu_table}
         JOIN {category_table} ON menu.category_id=category.id
-        WHERE category.name='{category_name}'
-    """.format(menu_table=db.menu_table, category_table=db.category_table, category_name=category_name)
+        WHERE category.name=%s
+    """.format(menu_table=db.menu_table, category_table=db.category_table)
 
-    db.cur.execute(sql)
+    db.cur.execute(sql, (category_name,))
     db.conn.commit()
     db_result = db.cur.fetchall()
 

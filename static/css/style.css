@@ -22,6 +22,10 @@
     background-color: rgba(0, 255, 255, 0.50);
 }
 
+.category_card {
+    width: 20em;
+}
+
 .record_head_of_date {
     border-top: solid;
     border-color: red;

@@ -35,13 +35,11 @@ Vue.component('menu-card',{
         },
     },
     template: `
-        <div class="p-2">
-            <div :id="card_title"
-                class="card category-card"
-                @click="open_modal">
-                <div class="card-header text-center">{{ card_title }}</div>
-                <img :src="img_path" class="card-img">
-            </div>
+        <div :id="card_title"
+            class="card category_card m-2"
+            @click="open_modal">
+            <div class="card-header text-center">{{ card_title }}</div>
+            <img :src="img_path" class="card-img">
         </div>`
 })
 

@@ -77,10 +77,10 @@ def getRecord(db):
 @record.route("/record", methods=['PATCH'])
 @dbConnect
 def patchRecord(db):
-    req_query = request.json
-    record_id = req_query.pop("record_id")
-
     try:
+        req_query = request.json
+        record_id = req_query.pop("record_id")
+
         for k, v in req_query.items():
             if k == "date":
                 sql = "UPDATE {table} SET date=%s WHERE id=%s".format(table=db.record_table)
@@ -95,17 +95,24 @@ def patchRecord(db):
             db.conn.commit()
     except Exception as e:
         logging.debug(e)
+        return jsonify({"error": e}), 500
 
-    return jsonify({})
+    return jsonify({"success": req_query}), 200
 
 
 # delete from record where id=?
 @record.route("/record", methods=['DELETE'])
 @dbConnect
 def deleteRecord(db):
-    record_id = request.json["record_id"]
-    sql = "DELETE FROM {table} WHERE id=%(id)s".format(table=db.record_table)
-    db.cur.execute(sql, {"id": record_id})
-    db.conn.commit()
-    db_result = db.cur.fetchall()
-    return jsonify(db_result)
+    try:
+        record_id = request.json["record_id"]
+        sql = "DELETE FROM {table} WHERE id=%(id)s".format(table=db.record_table)
+
+        db.cur.execute(sql, {"id": record_id})
+        db.conn.commit()
+        db_result = db.cur.fetchall()
+    except Exception as e:
+        logging.debug(e)
+        return jsonify({"error": e}), 500
+
+    return jsonify(db_result), 200

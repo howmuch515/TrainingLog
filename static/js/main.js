@@ -162,11 +162,21 @@ Vue.component('record-modal', {
             let r = store.state.record_list
             let c = store.state.card_category
 
+            // no card is selected when init.
+            if (c === "") {
+                return []
+            }
+
             return this.filter_record(r, c)
         },
         selected_menu_list() {
             let m = store.state.menu_list
             let c = store.state.card_category
+
+            // no card is selected when init.
+            if (c === "") {
+                return []
+            }
 
             return this.filter_menu(m, c)
         }

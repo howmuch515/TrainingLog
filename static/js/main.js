@@ -47,7 +47,6 @@ Vue.component('menu-card',{
 Vue.component('record-modal', {
     data: function() {
         return {
-            pre_date: "",
             submit_date: "",
             submit_menu_id: 5,
             submit_count: "",
@@ -55,7 +54,7 @@ Vue.component('record-modal', {
             editable_flag: false,
             selected_record_id: 0,
 
-            update_date: "",
+            update_item: "",
             update_menu_id: null,
             update_count: "",
         }
@@ -73,15 +72,19 @@ Vue.component('record-modal', {
             })
             return filtered_menu_list[0]["menu"]
         },
-        isHead: function(next_date) {
-            let result = this.pre_date !== next_date
-            this.pre_date = next_date
-            return result
+        isHead: function(pre_item, next_item) {
+            // skip top or buttom record
+            if (pre_item === undefined || next_item === undefined) {
+                return false
+            }
+            
+
+            pre_date = pre_item.date
+            next_date = next_item.date
+
+            return pre_date !== next_date
         },
         submit_log: function(event) {
-            // cancel submit form
-            event.preventDefault()
-
             let submit_data = {
                 date: this.submit_date,
                 menu_id: this.submit_menu_id,
@@ -204,7 +207,7 @@ Vue.component('record-modal', {
                             </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="v in selected_record_list" v-if="editable_flag && selected_record_id === v.record_id" :class="{ record_head_of_date: isHead(v.date) }">
+                                <tr v-for="(v, i) in selected_record_list" v-if="editable_flag && selected_record_id === v.record_id">
                                     <td><input v-model="update_date" type="date" class="col form-control"></td>
                                     <td><select v-model="update_menu_id" class="col form-control">
                                         <option v-for="v in selected_menu_list" :value="v.menu_id">
@@ -215,7 +218,7 @@ Vue.component('record-modal', {
                                     <td><button @click.prevent="update_log" class="col btn btn-primary">Submit</button></td>
                                     <td><button @click="switch_editable" class="col btn btn-warning">Cancel</button></td>
                                 </tr>
-                                <tr v-else>
+                                <tr v-else :class="{record_head_of_date: isHead(selected_record_list[i-1], selected_record_list[i])}">
                                     <td>{{ v.date }}</td>
                                     <td>{{ v.menu.menu_name }}(STEP:{{ v.menu.menu_step }})</td>
                                     <td>{{ v.count }}</td>
@@ -235,7 +238,7 @@ Vue.component('record-modal', {
                                 </option>
                             </select>
                             <input v-model="submit_count" type="number" class="col form-control">
-                            <button type="submit" @click="submit_log" class="col btn btn-primary">Submit</button>
+                            <button type="submit" @click.prevent="submit_log" class="col btn btn-primary">Submit</button>
                         </form>
                     </div><!-- /.modal-footer -->
                 </div><!-- /.modal-content -->

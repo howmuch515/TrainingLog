@@ -28,15 +28,29 @@ const store = new Vuex.Store({
 
 Vue.component('menu-card',{
     props: ['card_title', 'img_path'],
+    data: function() {
+        return {
+            mouseover_flag: false
+        }
+    },
     methods: {
         open_modal: function() {
             store.commit("set_category", this.card_title)
             $('#main_modal').modal('show')
         },
+        mouseover: function() {
+            this.mouseover_flag = true
+        },
+        mouseleave: function() {
+            this.mouseover_flag = false
+        },
     },
     template: `
         <div :id="card_title"
+            @mouseover="mouseover"
+            @mouseleave="mouseleave"
             class="card category_card m-2"
+            :class="{'shadow-lg': mouseover_flag}"
             @click="open_modal">
             <div class="card-header text-center">{{ card_title }}</div>
             <img :src="img_path" class="card-img">

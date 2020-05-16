@@ -137,7 +137,20 @@ Vue.component('record-modal', {
             this.update_count = update_count
         },
         delete_record: function(record_id) {
-            alert("delete" + record_id)
+            // reload
+            axios
+            .delete(RECORD_API, {data: {record_id: record_id}})
+            .then(res => {
+                axios
+                .get(RECORD_API)
+                .then(res => {
+                    store.commit("set_record", res.data)
+                })
+                .catch(err => console.error(`[-] Miss to get record. ${err}`))
+            })
+            .catch(err => {
+                console.error(`[!] failed submit... ${err.data}`)
+            })
         }
     },
     computed: {
